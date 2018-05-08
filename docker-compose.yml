@@ -8,4 +8,4 @@ services:
       - /data/cache/nginx:/var/cache/nginx
       - $PWD/sites-enabled:/etc/nginx/sites-enabled
       - /data/www/html:/etc/nginx/html
-    image: nginx-overseas
+    image: arterhuo/tengine
