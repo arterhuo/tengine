@@ -10,12 +10,13 @@ ENV   LANG en_US.UTF-8
 ENV   LC_ALL en_US.UTF-8
 
 # Configure timezone and locale
-RUN apt-get update && \
+RUN apt-get update  --fix-missing && \
     apt-get -y install localepurge apt-utils
 RUN locale-gen $LANGUAGE && \
     dpkg-reconfigure locales
 
 RUN apt-get install logrotate cron -y
+RUN useradd syslog -s /bin/nologin
 
 WORKDIR /usr/src/
 
@@ -130,6 +131,8 @@ RUN    apt-get -y install libssl-dev \
 ADD nginx.conf /etc/nginx/nginx.conf
 ADD ./logrotate.d/nginx /etc/logrotate.d/nginx
 ADD ./conf.d/default.conf /etc/nginx/conf.d/default.conf
+RUN echo "Asia/Shanghai" > /etc/timezone
+ADD ./localtime /etc/localtime
 
 VOLUME ["/var/log/nginx"]
 VOLUME ["/var/cache/nginx"]
@@ -138,4 +141,7 @@ WORKDIR /etc/nginx
 
 EXPOSE 80 443
 
-CMD ["nginx", "-g", "daemon off;"]
+#CMD ["nginx", "-g", "daemon off;"]
+ADD ./bootstrap.sh /bootstrap.sh
+RUN chmod u+x /bootstrap.sh
+CMD ["/bootstrap.sh"]
