@@ -2,10 +2,11 @@ version: '3'
 services:
   nginx:
     network_mode: "host"
+    restart: always
     container_name: nginx
     volumes:
       - /data/log/nginx:/var/log/nginx
       - /data/cache/nginx:/var/cache/nginx
-      - $PWD/sites-enabled:/etc/nginx/sites-enabled
+      - /etc//sites-enabled:/etc/nginx/sites-enabled
       - /data/www/html:/etc/nginx/html
     image: arterhuo/tengine
